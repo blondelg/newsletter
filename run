@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Command dictionnary
+declare -A commands
+commands['build']="docker-compose build"
+commands['start']="docker-compose up -d"
+commands['stop']="docker-compose stop"
+commands['tu']="docker-compose exec server /venv/bin/python /app/manage.py test"
+commands['bash']="docker-compose exec server /bin/bash"
+commands['logs']="docker-compose logs -f server"
+commands['shell']="docker-compose exec server /app/manage.py shell_plus"
+commands['stop-all']="docker stop $(docker ps -q)"
+commands['manage']="docker-compose exec server /app/manage.py $2 $3 $4 $5"
+commands['migrate']="docker-compose exec server /app/manage.py migrate $2 $3 $4"
+commands['createsuperuser']="docker-compose exec server /app/manage.py createsuperuser"
+commands['startapp']="docker-compose exec server /app/manage.py "
+#commands['']=
+
+if [ -v commands[$1] ]; 
+then
+    ${commands[$1]}
+else
+    echo "build:       build containers"
+    echo "start:       start project"
+    echo "shell:       start ipython shell"
+    echo "bash:        start bash for server"
+    echo "stop:        stop project's container"
+    echo "stop-all:    stop all docker containers"
+    echo "manage:      django's manage.py"
+    echo "logs:        show logs for server container"
+fi
